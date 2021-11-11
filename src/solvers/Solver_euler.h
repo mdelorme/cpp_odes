@@ -9,10 +9,11 @@ public:
   virtual ~Solver_euler() = default;
 
   virtual void evolve(real_t dh) {
-    real_t dx = dh * (alpha * x - beta*x*y);
-    real_t dy = dh * (delta * x * y - gamma*y); 
-    x += dx;
-    y += dy;
+    DataMap& vars    = model->get_vars();
+    auto derivatives = model->compute_derivatives(vars);
+
+    for (auto& [k, v]: vars)
+      v += dh * derivatives[k];
   }
 };
 

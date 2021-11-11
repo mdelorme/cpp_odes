@@ -1,7 +1,15 @@
 #include "solvers/Solver_factory.h"
+#include "models/Model_factory.h"
 #include "Params.h"
 
 using namespace ODEs;
+
+void write_vars(std::ofstream &f_out, real_t time, DataMap &vars) {
+  f_out << time << " ";
+  for (auto [k, v] : vars)
+    f_out << v << " ";
+  f_out << std::endl;
+}
 
 int main(int argc, char **argv) {
   if (argc < 2) {
@@ -12,27 +20,31 @@ int main(int argc, char **argv) {
 
   Params params(argv[1]);
 
-  Solver_base* solver = Solver_factory::instantiate(params.solver);
+  Model_base* model = Model_factory::instantiate(params.model_name);
+  std::cout << "Solving model " << model->get_name() << std::endl;
+  model->init(params);
+
+  Solver_base* solver = Solver_factory::instantiate(params.solver_name);
+  solver->set_model(model);
   std::cout << "Solving model with solver : " << solver->get_name() << std::endl;
 
   real_t t=0.0;
-  
-  solver->init();
 
   std::ofstream f_out;
   std::cout << "Saving outputs in " << params.file_out << std::endl;
   f_out.open(params.file_out);
 
-  auto res = solver->get_model();
-  f_out << t << " " << res.first << " " << res.second << std::endl;
+  auto vars = solver->get_vars();
+  write_vars(f_out, t, vars);
 
+  std::cout << "Temporal loop : " << std::endl;
   while (t < params.tmax) {
     int pct = t / params.tmax * 100.0;
     std::cout << "\r" << pct << "% done";
     solver->evolve(params.dt);
-    res = solver->get_model();
-    f_out << t << " " << res.first << " " << res.second << std::endl;
+    vars = solver->get_vars();
     t += params.dt;
+    write_vars(f_out, t, vars);
   }
   std::cout << "\r100 % done" << std::endl;
   f_out.close();
