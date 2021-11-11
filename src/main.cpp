@@ -25,6 +25,7 @@ int main(int argc, char **argv) {
   model->init(params);
 
   Solver_base* solver = Solver_factory::instantiate(params.solver_name);
+  solver->init(params);
   solver->set_model(model);
   std::cout << "Solving model with solver : " << solver->get_name() << std::endl;
 
@@ -42,7 +43,7 @@ int main(int argc, char **argv) {
     int pct = t / params.tmax * 100.0;
     std::cout << "\r" << pct << "% done";
     solver->evolve(params.dt);
-    vars = solver->get_vars();
+    vars = model->get_vars();
     t += params.dt;
     write_vars(f_out, t, vars);
   }

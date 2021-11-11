@@ -4,7 +4,9 @@
 #include "../external/inih/INIReader.h"
 
 using real_t = double;
-using DataMap = std::map<std::string, real_t>;
+using DataMap   = std::map<std::string, real_t>;
+using DataVec   = std::vector<DataMap>;
+using ScalarVec = std::vector<real_t>;
 
 namespace ODEs {
 
@@ -20,7 +22,7 @@ public:
   real_t dt;
 
   Params(std::string filename) : reader(filename) {
-    solver_name = reader.Get("run", "solver", "euler");
+    solver_name = reader.Get("solver", "solver", "euler");
     model_name  = reader.Get("model", "model", "lotka_volterra");
     file_out    = reader.Get("run", "output_filename", "ode.dat");
     tmax        = reader.GetFloat("run", "tmax", 10.0);
