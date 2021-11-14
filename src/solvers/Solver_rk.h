@@ -12,7 +12,7 @@ public:
 
   virtual void init(const Params &p) {
     order = p.reader.GetInteger("solver", "order", 2);
-    std::set<int> valid_orders {2, 3, 4};
+    std::set<int> valid_orders {2, 4};
     if (valid_orders.count(order) == 0) {
       std::cerr << "ERROR : Runge-Kutta method not implemented/valid for order " << order << std::endl;
       std::cerr << "        Setting order=2" << std::endl;
