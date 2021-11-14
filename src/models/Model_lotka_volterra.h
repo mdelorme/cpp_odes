@@ -37,7 +37,6 @@ public:
   }
 
   virtual void save_data(std::string prefix, int iteration, real_t time, bool first) {
-    std::ofstream f_out;
     f_out << time << " " << vars["X"] << " " << vars["Y"] << std::endl;
   }
 
