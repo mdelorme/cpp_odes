@@ -5,6 +5,7 @@
 #include "Model_lotka_volterra.h"
 #include "Model_brusselator.h"
 #include "Model_van_der_pol.h"
+#include "Model_lorenz.h"
 
 namespace ODEs {
 
@@ -16,6 +17,7 @@ public:
     REGISTER_MODEL(lotka_volterra, Model_LotkaVolterra)
     REGISTER_MODEL(brusselator,    Model_Brusselator)
     REGISTER_MODEL(van_der_pol,    Model_VanDerPol)
+    REGISTER_MODEL(lorenz,         Model_Lorenz)
 
 
     std::cerr << "ERROR : No model named " << name << std::endl;
