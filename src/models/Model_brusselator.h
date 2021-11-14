@@ -8,6 +8,8 @@ class Model_Brusselator : public Model_base {
 private:
   real_t A, B;
 
+  std::ofstream f_out;
+
 public:
   Model_Brusselator() {};
 
@@ -17,6 +19,8 @@ public:
 
     vars["X"] = 1.0;
     vars["Y"] = 1.0;
+
+    f_out.open(p.file_out);
   }
 
   virtual DataMap compute_derivatives(DataMap vars) {
@@ -28,6 +32,15 @@ public:
     res["Y"] = B*x - x*x*y;
 
     return res;
+  }
+
+  virtual void save_data(std::string prefix, int iteration, real_t time, bool first) {
+    std::ofstream f_out;
+    f_out << time << " " << vars["X"] << " " << vars["Y"] << std::endl;
+  }
+
+  virtual void finalize() {
+    f_out.close();
   }
 };
 

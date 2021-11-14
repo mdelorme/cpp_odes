@@ -14,14 +14,17 @@ public:
   Model_base() = default;
   virtual ~Model_base() = default;
 
-  virtual void init(const Params &p) = 0;
+  virtual void    init(const Params &p) = 0;
   virtual DataMap compute_derivatives(DataMap vars) = 0;
+  virtual void    save_data(std::string prefix, int iteration, real_t time, bool first=false) = 0;
+  virtual void    finalize() = 0;
 
   real_t      get_var(std::string var_name) { return vars[var_name]; };
   DataMap&    get_vars()                    { return vars; };
   std::string get_name()                    { return name; };
 
   void set_name(std::string _name) { name = _name; };
+
 };
 
 }

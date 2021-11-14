@@ -30,25 +30,28 @@ int main(int argc, char **argv) {
   std::cout << "Solving model with solver : " << solver->get_name() << std::endl;
 
   real_t t=0.0;
+  int    iteration=0;
 
   std::ofstream f_out;
-  std::cout << "Saving outputs in " << params.file_out << std::endl;
+  std::cout << "Saving outputs prefix is " << params.file_out << std::endl;
   f_out.open(params.file_out);
 
   auto vars = solver->get_vars();
   write_vars(f_out, t, vars);
 
-  std::cout << "Temporal loop : " << std::endl;
+  std::cout << "Integrating ..." << std::endl;
   while (t < params.tmax) {
     int pct = t / params.tmax * 100.0;
-    std::cout << "\r" << pct << "% done";
     solver->evolve(params.dt);
     vars = model->get_vars();
+    
     t += params.dt;
-    write_vars(f_out, t, vars);
+    iteration++;
+
+    model->save_data(params.file_out, iteration, t);
   }
-  std::cout << "\r100 % done" << std::endl;
-  f_out.close();
+
+  model->finalize();
 
   std::cout << "ALL good !" << std::endl;
 
